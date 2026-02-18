@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMI — K-Beauty Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #faf8f5;
+    --surface: #ffffff;
+    --border: #e8e2d9;
+    --text: #1a1714;
+    --text-muted: #8a8078;
+    --accent: #c9a87c;
+    --accent-light: #f0e8db;
+    --danger: #c96b6b;
+    --radius: 4px;
+    --shadow: 0 8px 40px rgba(26,23,20,.08);
+    --transition: .28s cubic-bezier(.4,0,.2,1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--text);
+    color: #c9c3bb;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: .08em;
+    padding: 8px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 900;
+    background: rgba(250,248,245,.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    height: 68px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: .15em;
+    color: var(--text);
+    text-decoration: none;
+    grid-column: 2;
+  }
+  .logo span { color: var(--accent); }
+
+  nav { display: flex; gap: 28px; align-items: center; }
+  nav a {
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  nav a:hover { color: var(--text); }
+
+  .header-actions {
+    display: flex; gap: 8px; align-items: center;
+    justify-content: flex-end;
+  }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border: none; background: none; cursor: pointer;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    transition: background var(--transition), color var(--transition);
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--accent-light); color: var(--text); }
+  .badge {
+    position: absolute; top: 6px; right: 6px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 9px; font-weight: 500;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: scale(0);
+    transition: all .2s;
+  }
+  .badge.show { opacity: 1; transform: scale(1); }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 1280px; margin: 0 auto;
+    padding: 80px 32px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-text h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(44px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+    margin-bottom: 20px;
+  }
+  .hero-text h1 em { font-style: italic; color: var(--accent); }
+  .hero-text p { color: var(--text-muted); max-width: 380px; line-height: 1.8; margin-bottom: 36px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    border: none; cursor: pointer;
+    transition: all var(--transition);
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--text); color: #fff; }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-outline { background: none; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--text); background: var(--text); color: #fff; }
+
+  .hero-visual {
+    height: 500px;
+    background: linear-gradient(135deg, #f5ede0 0%, #e8d5b8 50%, #d4b896 100%);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 70%, rgba(201,168,124,.3) 0%, transparent 60%);
+  }
+  .hero-visual-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    font-weight: 300;
+    color: rgba(255,255,255,.35);
+    letter-spacing: .05em;
+    user-select: none;
+  }
+  .hero-tag {
+    position: absolute; bottom: 28px; left: 28px;
+    background: rgba(255,255,255,.85); backdrop-filter: blur(8px);
+    padding: 12px 20px; border-radius: var(--radius);
+    font-size: 12px; font-weight: 500;
+    border: 1px solid rgba(255,255,255,.5);
+  }
+
+  /* ── SECTION ── */
+  .section { max-width: 1280px; margin: 0 auto; padding: 60px 32px; }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; font-weight: 400;
+  }
+  .section-link {
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color var(--transition);
+  }
+  .section-link:hover { color: var(--accent); }
+
+  /* ── PRODUCT GRID ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px;
+  }
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow var(--transition), transform var(--transition);
+    cursor: pointer;
+    position: relative;
+  }
+  .product-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-4px);
+  }
+  .product-card:hover .card-actions { opacity: 1; transform: translateY(0); }
+
+  .product-img {
+    height: 280px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-img::before {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .product-card:hover .product-img::before { opacity: 1; }
+
+  .badge-new, .badge-sale {
+    position: absolute; top: 14px; left: 14px;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+  .badge-new { background: var(--text); color: #fff; }
+  .badge-sale { background: var(--danger); color: #fff; }
+
+  .wishlist-btn {
+    position: absolute; top: 12px; right: 12px;
+    width: 34px; height: 34px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+  .wishlist-btn:hover, .wishlist-btn.active { color: var(--danger); border-color: var(--danger); }
+  .wishlist-btn.active { background: #fff0f0; }
+
+  .card-body { padding: 18px 20px 20px; }
+  .card-brand { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+  .card-name { font-size: 15px; font-weight: 400; margin-bottom: 10px; color: var(--text); }
+  .card-price { display: flex; align-items: baseline; gap: 8px; }
+  .price-current { font-size: 18px; font-weight: 500; }
+  .price-original { font-size: 13px; text-decoration: line-through; color: var(--text-muted); }
+  .card-rating { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+  .stars { color: var(--accent); }
+
+  .card-actions {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: var(--text);
+    padding: 14px;
+    display: flex; gap: 8px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all var(--transition);
+  }
+  .card-actions button {
+    flex: 1; padding: 10px 0;
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,.2);
+    cursor: pointer;
+    transition: all .2s;
+    background: transparent; color: #fff;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .card-actions .add-btn { background: var(--accent); border-color: var(--accent); }
+  .card-actions button:hover { opacity: .85; }
+
+  /* ── CATEGORY STRIP ── */
+  .categories {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 32px 60px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .cat-item {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    padding: 28px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-decoration: none; color: var(--text);
+  }
+  .cat-item:hover { border-color: var(--accent); background: var(--accent-light); }
+  .cat-icon { font-size: 32px; }
+  .cat-name { font-size: 12px; letter-spacing: .05em; font-weight: 500; text-align: center; }
+
+  /* ── MODALS ── */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,23,20,.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--transition);
+  }
+  .overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    position: fixed;
+    z-index: 1001;
+    background: var(--surface);
+    transition: transform var(--transition), opacity var(--transition);
+  }
+  .modal-center {
+    top: 50%; left: 50%;
+    transform: translate(-50%,-60%);
+    opacity: 0;
+    width: 440px; max-width: 95vw;
+    border-radius: 8px;
+    padding: 48px 44px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.15);
+  }
+  .modal-center.open { transform: translate(-50%,-50%); opacity: 1; }
+
+  .modal-side {
+    top: 0; right: 0; bottom: 0;
+    width: 420px; max-width: 95vw;
+    transform: translateX(100%);
+    opacity: 0;
+    display: flex; flex-direction: column;
+    box-shadow: -8px 0 40px rgba(0,0,0,.1);
+  }
+  .modal-side.open { transform: translateX(0); opacity: 1; }
+
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 400;
+  }
+  .modal-close {
+    width: 36px; height: 36px; border: none; background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; color: var(--text-muted);
+    font-size: 20px;
+    transition: background var(--transition);
+  }
+  .modal-close:hover { background: var(--accent-light); color: var(--text); }
+
+  .modal-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
+  .modal-footer { padding: 20px 28px; border-top: 1px solid var(--border); }
+
+  /* ── LOGIN MODAL ── */
+  .login-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 500;
+    text-align: center; margin-bottom: 8px;
+    letter-spacing: .12em;
+  }
+  .login-logo span { color: var(--accent); }
+  .login-sub { text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 36px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .form-input {
+    width: 100%; padding: 12px 16px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    color: var(--text);
+    transition: border var(--transition);
+    outline: none;
+    border-radius: var(--radius);
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .form-check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+  .form-check input { accent-color: var(--accent); }
+  .forgot { font-size: 13px; color: var(--accent); text-decoration: none; }
+  .forgot:hover { text-decoration: underline; }
+  .divider { text-align: center; color: var(--text-muted); font-size: 12px; margin: 24px 0; position: relative; }
+  .divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border); }
+  .divider span { background: var(--surface); padding: 0 12px; position: relative; }
+  .social-btns { display: flex; gap: 10px; }
+  .social-btn {
+    flex: 1; padding: 11px;
+    border: 1px solid var(--border);
+    background: none; cursor: pointer;
+    font-size: 12px; letter-spacing: .05em;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all .2s;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .social-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+  .register-link { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+  .register-link a { color: var(--accent); text-decoration: none; }
+
+  /* ── CART ── */
+  .cart-item {
+    display: flex; gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cart-item-img {
+    width: 72px; height: 72px;
+    background: var(--accent-light);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-brand { font-size: 11px; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+  .cart-item-name { font-size: 14px; font-weight: 400; margin: 2px 0 10px; }
+  .cart-qty-row { display: flex; align-items: center; justify-content: space-between; }
+  .qty-ctrl { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .qty-btn { width: 28px; height: 28px; border: none; background: none; cursor: pointer; font-size: 16px; transition: background .15s; }
+  .qty-btn:hover { background: var(--accent-light); }
+  .qty-val { width: 36px; text-align: center; font-size: 13px; border: none; outline: none; background: none; }
+  .cart-remove { color: var(--text-muted); font-size: 12px; cursor: pointer; background: none; border: none; transition: color .2s; }
+  .cart-remove:hover { color: var(--danger); }
+  .cart-item-price { font-size: 15px; font-weight: 500; white-space: nowrap; }
+
+  .cart-summary { background: var(--bg); padding: 20px; border-radius: var(--radius); }
+  .summary-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 10px; color: var(--text-muted); }
+  .summary-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 500; padding-top: 14px; border-top: 1px solid var(--border); margin-top: 4px; }
+  .cart-empty { text-align: center; padding: 60px 0; color: var(--text-muted); }
+  .cart-empty .empty-icon { font-size: 48px; margin-bottom: 16px; }
+
+  /* ── WISHLIST ── */
+  .wish-item {
+    display: flex; gap: 14px; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid var(--border);
+  }
+  .wish-img {
+    width: 64px; height: 64px;
+    background: var(--accent-light);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .wish-info { flex: 1; }
+  .wish-name { font-size: 14px; margin-bottom: 4px; }
+  .wish-price { font-size: 15px; font-weight: 500; color: var(--accent); }
+  .wish-remove { color: var(--text-muted); font-size: 18px; cursor: pointer; background: none; border: none; transition: color .2s; }
+  .wish-remove:hover { color: var(--danger); }
+  .wish-add { font-size: 11px; padding: 8px 14px; }
+
+  /* ── TRACKING ── */
+  .tracking-input-row { display: flex; gap: 10px; margin-bottom: 32px; }
+  .tracking-input-row .form-input { flex: 1; }
+  .track-btn { padding: 0 24px; white-space: nowrap; font-size: 12px; letter-spacing: .08em; }
+
+  .timeline { padding: 0; list-style: none; }
+  .timeline-item {
+    display: flex; gap: 16px;
+    padding-bottom: 28px;
+    position: relative;
+  }
+  .timeline-item:not(:last-child)::before {
+    content: ''; position: absolute;
+    left: 15px; top: 30px; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .timeline-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; position: relative; z-index: 1;
+  }
+  .timeline-item.done .timeline-dot { background: var(--accent); }
+  .timeline-item.active .timeline-dot { background: var(--text); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(26,23,20,.3)} 50%{box-shadow:0 0 0 8px rgba(26,23,20,0)} }
+
+  .timeline-content { padding-top: 4px; }
+  .timeline-label { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .timeline-time { font-size: 12px; color: var(--text-muted); }
+  .timeline-detail { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+  .tracking-info {
+    background: var(--bg); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 28px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .tracking-info-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 4px; }
+  .tracking-info-item .value { font-size: 14px; font-weight: 500; }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .filter-chip {
+    padding: 8px 18px; border: 1px solid var(--border);
+    background: none; cursor: pointer; font-size: 12px;
+    letter-spacing: .06em; border-radius: 99px;
+    transition: all .2s; font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted);
+  }
+  .filter-chip:hover, .filter-chip.active { background: var(--text); color: #fff; border-color: var(--text); }
+  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ── TOAST ── */
+  .toast-container {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--text); color: #fff;
+    padding: 12px 24px; border-radius: 99px;
+    font-size: 13px; font-weight: 400;
+    opacity: 0; transform: translateY(16px);
+    transition: all .3s;
+    pointer-events: none;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 80px;
+    border-top: 1px solid var(--border);
+    background: var(--text);
+    color: #8a8078;
+  }
+  .footer-grid {
+    max-width: 1280px; margin: 0 auto;
+    padding: 60px 32px 40px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 400; letter-spacing: .12em;
+    color: #fff; margin-bottom: 12px;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-desc { font-size: 13px; line-height: 1.8; margin-bottom: 24px; }
+  .footer-col h5 { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #c9c3bb; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 13px; color: #8a8078; text-decoration: none; margin-bottom: 10px; transition: color .2s; }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-bottom {
+    max-width: 1280px; margin: 0 auto;
+    padding: 20px 32px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px;
+  }
+
+  /* ── USER MENU ── */
+  .user-dropdown {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    width: 200px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    opacity: 0; pointer-events: none; transform: translateY(-8px);
+    transition: all .2s;
+    z-index: 100;
+  }
+  .user-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+  .user-dropdown a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 18px; font-size: 13px;
+    text-decoration: none; color: var(--text);
+    transition: background .15s;
+    border-bottom: 1px solid var(--border);
+  }
+  .user-dropdown a:last-child { border-bottom: none; }
+  .user-dropdown a:hover { background: var(--accent-light); }
+  .icon-btn-wrap { position: relative; }
+
+  /* ── PROMO BANNER ── */
+  .promo-strip {
+    background: var(--accent-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 0 32px 40px;
+    max-width: calc(1280px - 64px);
+    margin-left: auto; margin-right: auto;
+  }
+  .promo-strip h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; }
+  .promo-strip p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  /* RESPONSIVE */
+  @media(max-width:768px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px; }
+    .hero-visual { height: 300px; }
+    .categories { grid-template-columns: repeat(3, 1fr); padding: 0 20px 40px; }
+    .section { padding: 40px 20px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .header-inner { padding: 0 20px; }
+    nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">무료배송 · 3만원 이상 구매 시 · 제주/도서산간 제외</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <nav>
+      <a href="#" onclick="filterCategory('all')">전체</a>
+      <a href="#" onclick="filterCategory('skincare')">스킨케어</a>
+      <a href="#" onclick="filterCategory('makeup')">메이크업</a>
+      <a href="#" onclick="filterCategory('suncare')">선케어</a>
+    </nav>
+
+    <a href="#" class="logo">LUM<span>I</span></a>
+
+    <div class="header-actions">
+      <div class="icon-btn-wrap">
+        <button class="icon-btn" onclick="toggleUserMenu()" id="userBtn" title="로그인">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" onclick="openLogin();closeUserMenu()">🔑 로그인 / 회원가입</a>
+          <a href="#" onclick="openWishlist();closeUserMenu()">♡ 찜목록</a>
+          <a href="#" onclick="openTracking();closeUserMenu()">📦 배송추적</a>
+          <a href="#" onclick="closeUserMenu()">📋 주문내역</a>
+          <a href="#" onclick="closeUserMenu()">⚙️ 설정</a>
+        </div>
+      </div>
+
+      <button class="icon-btn" onclick="openWishlist()" title="찜목록">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 21C12 21 3 15 3 9a5 5 0 0110 0 5 5 0 0110 0c0 6-9 12-9 12z" stroke-linejoin="round"/></svg>
+        <span class="badge" id="wishBadge">0</span>
+      </button>
+
+      <button class="icon-btn" onclick="openCart()" title="장바구니">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="badge" id="cartBadge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>K-Beauty,<br><em>Redefined</em><br>for You</h1>
+    <p>한국 최고의 뷰티 브랜드를 한 곳에서. 당신의 피부에 꼭 맞는 제품을 찾아보세요.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">쇼핑하기 →</button>
+      <button class="btn btn-outline" onclick="openTracking()">배송 추적</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-text">✦</div>
+    <div class="hero-tag">✨ 2025 베스트셀러 컬렉션</div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <a class="cat-item" href="#" onclick="filterCategory('skincare')"><div class="cat-icon">💧</div><div class="cat-name">스킨케어</div></a>
+  <a class="cat-item" href="#" onclick="filterCategory('makeup')"><div class="cat-icon">💄</div><div class="cat-name">메이크업</div></a>
+  <a class="cat-item" href="#" onclick="filterCategory('suncare')"><div class="cat-icon">☀️</div><div class="cat-name">선케어</div></a>
+  <a class="cat-item" href="#" onclick="filterCategory('mask')"><div class="cat-icon">🎭</div><div class="cat-name">마스크팩</div></a>
+  <a class="cat-item" href="#" onclick="filterCategory('body')"><div class="cat-icon">🧴</div><div class="cat-name">바디케어</div></a>
+</div>
+
+<!-- PROMO -->
+<div class="promo-strip">
+  <div>
+    <h3>신규 회원 혜택 🎁</h3>
+    <p>가입 즉시 10% 할인 쿠폰 + 무료 샘플 증정</p>
+  </div>
+  <button class="btn btn-primary" onclick="openLogin()">지금 가입하기</button>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section" id="products">
+  <div class="section-header">
+    <h2 class="section-title">베스트셀러</h2>
+    <a href="#" class="section-link">전체보기 →</a>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-chip active" onclick="filterCategory('all',this)">전체</button>
+    <button class="filter-chip" onclick="filterCategory('skincare',this)">스킨케어</button>
+    <button class="filter-chip" onclick="filterCategory('makeup',this)">메이크업</button>
+    <button class="filter-chip" onclick="filterCategory('suncare',this)">선케어</button>
+    <button class="filter-chip" onclick="filterCategory('mask',this)">마스크팩</button>
+    <button class="filter-chip" onclick="filterCategory('body',this)">바디케어</button>
+  </div>
+
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">LUM<span>I</span></div>
+      <div class="footer-desc">한국의 아름다움을 전 세계에 알리는<br>프리미엄 K-뷰티 셀렉트샵입니다.</div>
+      <div style="font-size:13px">📧 hello@lumi-beauty.com</div>
+    </div>
+    <div class="footer-col">
+      <h5>쇼핑</h5>
+      <a href="#">신상품</a><a href="#">베스트셀러</a><a href="#">세일</a><a href="#">기획전</a>
+    </div>
+    <div class="footer-col">
+      <h5>고객지원</h5>
+      <a href="#">자주묻는질문</a><a href="#">주문/배송</a><a href="#">교환/반품</a><a href="#">1:1문의</a>
+    </div>
+    <div class="footer-col">
+      <h5>회사</h5>
+      <a href="#">브랜드 스토리</a><a href="#">입점 문의</a><a href="#">제휴 제안</a><a href="#">채용</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 LUMI Beauty. All rights reserved.</span>
+    <span>개인정보처리방침 · 이용약관</span>
+  </div>
+</footer>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- ── LOGIN MODAL ── -->
+<div class="modal modal-center" id="loginModal">
+  <button class="modal-close" style="position:absolute;top:16px;right:16px" onclick="closeAll()">✕</button>
+  <div class="login-logo">LUM<span>I</span></div>
+  <div class="login-sub">프리미엄 K-뷰티의 시작</div>
+  <div class="form-group">
+    <label class="form-label">이메일</label>
+    <input class="form-input" type="email" placeholder="hello@example.com">
+  </div>
+  <div class="form-group">
+    <label class="form-label">비밀번호</label>
+    <input class="form-input" type="password" placeholder="••••••••">
+  </div>
+  <div class="form-actions">
+    <label class="form-check"><input type="checkbox"> 로그인 상태 유지</label>
+    <a href="#" class="forgot">비밀번호 찾기</a>
+  </div>
+  <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">로그인</button>
+  <div class="divider"><span>또는 소셜 로그인</span></div>
+  <div class="social-btns">
+    <button class="social-btn" onclick="doLogin()">🟡 카카오</button>
+    <button class="social-btn" onclick="doLogin()">🟢 네이버</button>
+    <button class="social-btn" onclick="doLogin()">⚪ 구글</button>
+  </div>
+  <div class="register-link">계정이 없으신가요? <a href="#" onclick="showToast('📝 회원가입 페이지로 이동합니다')">지금 가입하기</a></div>
+</div>
+
+<!-- ── CART MODAL ── -->
+<div class="modal modal-side" id="cartModal">
+  <div class="modal-header">
+    <span class="modal-title">장바구니</span>
+    <button class="modal-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="modal-body" id="cartBody"></div>
+  <div class="modal-footer" id="cartFooter"></div>
+</div>
+
+<!-- ── WISHLIST MODAL ── -->
+<div class="modal modal-side" id="wishModal">
+  <div class="modal-header">
+    <span class="modal-title">찜목록</span>
+    <button class="modal-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="modal-body" id="wishBody"></div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="addAllToCart()">전체 장바구니 담기</button>
+  </div>
+</div>
+
+<!-- ── TRACKING MODAL ── -->
+<div class="modal modal-center" style="width:520px;max-width:95vw;padding:0;border-radius:8px;overflow:hidden" id="trackModal">
+  <div class="modal-header">
+    <span class="modal-title">배송 추적</span>
+    <button class="modal-close" onclick="closeAll()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="tracking-input-row">
+      <input class="form-input" id="trackNum" placeholder="운송장 번호 입력 (예: 1234567890)">
+      <button class="btn btn-primary track-btn" onclick="doTracking()">조회하기</button>
+    </div>
+    <div id="trackResult"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container"><div class="toast" id="toast"></div></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────
+const PRODUCTS = [
+  { id:1, brand:'LANEIGE', name:'워터 슬리핑 마스크', price:28000, orig:null, rating:4.8, reviews:1240, emoji:'💦', category:'mask', badge:'베스트' },
+  { id:2, brand:'COSRX', name:'스네일 96 무신 에센스', price:22000, orig:35000, rating:4.9, reviews:3210, emoji:'🐌', category:'skincare', badge:'세일' },
+  { id:3, brand:'ROMAND', name:'글래스팅 워터 틴트', price:14000, orig:null, rating:4.7, reviews:890, emoji:'💄', category:'makeup', badge:'신상' },
+  { id:4, brand:'BEAUTY OF JOSEON', name:'선스크린 라이트 온 세럼', price:18000, orig:null, rating:4.9, reviews:5670, emoji:'☀️', category:'suncare', badge:null },
+  { id:5, brand:'INNISFREE', name:'그린티 씨드 세럼', price:31000, orig:null, rating:4.6, reviews:2100, emoji:'🍵', category:'skincare', badge:null },
+  { id:6, brand:'MEDICUBE', name:'레드 필링 패드', price:26000, orig:36000, rating:4.5, reviews:780, emoji:'🔴', category:'skincare', badge:'세일' },
+  { id:7, brand:'SULWHASOO', name:'설화수 자음생 에센스', price:89000, orig:null, rating:4.8, reviews:430, emoji:'🌸', category:'skincare', badge:'프리미엄' },
+  { id:8, brand:'3CE', name:'무드 레시피 립 컬러', price:17000, orig:null, rating:4.7, reviews:2340, emoji:'🎨', category:'makeup', badge:null },
+];
+
+let cart = {};
+let wishlist = new Set();
+let loggedIn = false;
+
+// ── RENDER PRODUCTS ───────────────────────────────
+function renderProducts(filter='all') {
+  const grid = document.getElementById('productGrid');
+  const items = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
+  grid.innerHTML = items.map(p => `
+    <div class="product-card" data-id="${p.id}">
+      <div class="product-img" style="background:${getBg(p.category)}">
+        <span style="font-size:72px">${p.emoji}</span>
+        ${p.badge ? `<span class="${p.badge==='세일'?'badge-sale':'badge-new'}">${p.badge}</span>` : ''}
+        <button class="wishlist-btn ${wishlist.has(p.id)?'active':''}" onclick="toggleWish(${p.id},event)" title="찜하기">${wishlist.has(p.id)?'♥':'♡'}</button>
+      </div>
+      <div class="card-body">
+        <div class="card-brand">${p.brand}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-price">
+          <span class="price-current">${p.price.toLocaleString()}원</span>
+          ${p.orig ? `<span class="price-original">${p.orig.toLocaleString()}원</span>` : ''}
+        </div>
+        <div class="card-rating"><span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</span> ${p.rating} (${p.reviews.toLocaleString()})</div>
+      </div>
+      <div class="card-actions">
+        <button onclick="toggleWish(${p.id},event)">♥ 찜</button>
+        <button class="add-btn" onclick="addToCart(${p.id},event)">장바구니 +</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getBg(cat) {
+  const m = { skincare:'linear-gradient(135deg,#f0e8db,#e8d5b8)', makeup:'linear-gradient(135deg,#fce8ea,#f5c6ca)',
+    suncare:'linear-gradient(135deg,#fff8e1,#ffe082)', mask:'linear-gradient(135deg,#e8f5e9,#c8e6c9)', body:'linear-gradient(135deg,#f3e5f5,#e1bee7)' };
+  return m[cat] || m.skincare;
+}
+
+function filterCategory(cat, el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderProducts(cat);
+  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+  return false;
+}
+
+// ── WISHLIST ──────────────────────────────────────
+function toggleWish(id, e) {
+  if (e) e.stopPropagation();
+  if (wishlist.has(id)) { wishlist.delete(id); showToast('찜목록에서 제거되었습니다'); }
+  else { wishlist.add(id); showToast('❤️ 찜목록에 추가되었습니다'); }
+  updateBadges();
+  renderProducts(getCurrentFilter());
+}
+
+function renderWishlist() {
+  const body = document.getElementById('wishBody');
+  if (!wishlist.size) { body.innerHTML = '<div class="cart-empty"><div class="empty-icon">♡</div><p>찜한 상품이 없습니다</p></div>'; return; }
+  body.innerHTML = [...wishlist].map(id => {
+    const p = PRODUCTS.find(x => x.id === id);
+    return `<div class="wish-item">
+      <div class="wish-img">${p.emoji}</div>
+      <div class="wish-info">
+        <div class="card-brand">${p.brand}</div>
+        <div class="wish-name">${p.name}</div>
+        <div class="wish-price">${p.price.toLocaleString()}원</div>
+      </div>
+      <button class="btn btn-outline wish-add" onclick="addToCart(${p.id})">담기</button>
+      <button class="wish-remove" onclick="toggleWish(${p.id})">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addAllToCart() {
+  wishlist.forEach(id => { if (!cart[id]) cart[id] = 0; cart[id]++; });
+  updateBadges();
+  showToast('🛒 찜목록의 모든 상품을 장바구니에 담았습니다');
+  closeAll();
+  setTimeout(openCart, 400);
+}
+
+// ── CART ──────────────────────────────────────────
+function addToCart(id, e) {
+  if (e) e.stopPropagation();
+  if (!cart[id]) cart[id] = 0;
+  cart[id]++;
+  updateBadges();
+  showToast('🛒 장바구니에 추가되었습니다');
+}
+
+function renderCart() {
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFooter');
+  const items = Object.entries(cart).filter(([,q]) => q > 0);
+  if (!items.length) {
+    body.innerHTML = '<div class="cart-empty"><div class="empty-icon">🛒</div><p>장바구니가 비어있습니다</p></div>';
+    foot.innerHTML = '';
+    return;
+  }
+  body.innerHTML = items.map(([id, qty]) => {
+    const p = PRODUCTS.find(x => x.id == id);
+    return `<div class="cart-item">
+      <div class="cart-item-img">${p.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-brand">${p.brand}</div>
+        <div class="cart-item-name">${p.name}</div>
+        <div class="cart-qty-row">
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+            <input class="qty-val" type="text" value="${qty}" readonly>
+            <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+          </div>
+          <button class="cart-remove" onclick="removeCart(${id})">삭제</button>
+        </div>
+      </div>
+      <div class="cart-item-price">${(p.price*qty).toLocaleString()}원</div>
+    </div>`;
+  }).join('');
+
+  const sub = items.reduce((s,[id,q]) => s + PRODUCTS.find(x=>x.id==id).price*q, 0);
+  const ship = sub >= 30000 ? 0 : 3000;
+  foot.innerHTML = `<div class="cart-summary">
+    <div class="summary-row"><span>상품금액</span><span>${sub.toLocaleString()}원</span></div>
+    <div class="summary-row"><span>배송비</span><span>${ship ? ship.toLocaleString()+'원' : '<span style="color:var(--accent)">무료</span>'}</span></div>
+    <div class="summary-total"><span>총 결제금액</span><span>${(sub+ship).toLocaleString()}원</span></div>
+  </div>
+  <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px" onclick="checkout()">
+    결제하기 · ${(sub+ship).toLocaleString()}원
+  </button>`;
+}
+
+function changeQty(id, delta) {
+  cart[id] = Math.max(0, (cart[id]||0) + delta);
+  if (!cart[id]) delete cart[id];
+  updateBadges(); renderCart();
+}
+function removeCart(id) { delete cart[id]; updateBadges(); renderCart(); }
+function checkout() { showToast('✅ 주문이 완료되었습니다! 감사합니다 😊'); cart = {}; updateBadges(); closeAll(); }
+
+// ── TRACKING ──────────────────────────────────────
+function doTracking() {
+  const num = document.getElementById('trackNum').value.trim();
+  if (!num) { showToast('⚠️ 운송장 번호를 입력해주세요'); return; }
+  const result = document.getElementById('trackResult');
+  result.innerHTML = `<div class="tracking-info">
+    <div class="tracking-info-item"><div class="label">운송장 번호</div><div class="value">${num}</div></div>
+    <div class="tracking-info-item"><div class="label">택배사</div><div class="value">CJ대한통운</div></div>
+    <div class="tracking-info-item"><div class="label">출발지</div><div class="value">경기도 안성</div></div>
+    <div class="tracking-info-item"><div class="label">예정 도착</div><div class="value" style="color:var(--accent)">오늘 오후 배송</div></div>
+  </div>
+  <ul class="timeline">
+    <li class="timeline-item done">
+      <div class="timeline-dot">📦</div>
+      <div class="timeline-content">
+        <div class="timeline-label">상품 준비</div>
+        <div class="timeline-time">2025.02.17 · 09:30</div>
+        <div class="timeline-detail">LUMI 물류센터에서 포장이 완료되었습니다</div>
+      </div>
+    </li>
+    <li class="timeline-item done">
+      <div class="timeline-dot">🚚</div>
+      <div class="timeline-content">
+        <div class="timeline-label">배송 출발</div>
+        <div class="timeline-time">2025.02.17 · 14:20</div>
+        <div class="timeline-detail">경기도 안성 허브에서 출발했습니다</div>
+      </div>
+    </li>
+    <li class="timeline-item done">
+      <div class="timeline-dot">🏭</div>
+      <div class="timeline-content">
+        <div class="timeline-label">분류센터 도착</div>
+        <div class="timeline-time">2025.02.17 · 22:45</div>
+        <div class="timeline-detail">서울 동부 터미널에 도착했습니다</div>
+      </div>
+    </li>
+    <li class="timeline-item active">
+      <div class="timeline-dot">🛵</div>
+      <div class="timeline-content">
+        <div class="timeline-label">배송 중</div>
+        <div class="timeline-time">2025.02.18 · 10:12</div>
+        <div class="timeline-detail">배달원이 고객님 댁으로 출발했습니다</div>
+      </div>
+    </li>
+    <li class="timeline-item">
+      <div class="timeline-dot">🏠</div>
+      <div class="timeline-content">
+        <div class="timeline-label">배송 완료</div>
+        <div class="timeline-time">예정</div>
+      </div>
+    </li>
+  </ul>`;
+}
+
+// ── MODALS ────────────────────────────────────────
+function openOverlay() {
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function openLogin() { openOverlay(); document.getElementById('loginModal').classList.add('open'); }
+function openCart() { renderCart(); openOverlay(); document.getElementById('cartModal').classList.add('open'); }
+function openWishlist() { renderWishlist(); openOverlay(); document.getElementById('wishModal').classList.add('open'); }
+function openTracking() { openOverlay(); document.getElementById('trackModal').classList.add('open'); }
+
+function closeAll() {
+  document.getElementById('overlay').classList.remove('open');
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+  document.body.style.overflow = '';
+  closeUserMenu();
+}
+
+function doLogin() {
+  loggedIn = true;
+  showToast('🎉 로그인되었습니다! 환영합니다');
+  closeAll();
+}
+
+// ── USER DROPDOWN ─────────────────────────────────
+function toggleUserMenu() {
+  document.getElementById('userDropdown').classList.toggle('open');
+}
+function closeUserMenu() {
+  document.getElementById('userDropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('userBtn').contains(e.target)) closeUserMenu();
+});
+
+// ── BADGES ───────────────────────────────────────
+function updateBadges() {
+  const cartCount = Object.values(cart).reduce((s,v) => s+v, 0);
+  const wishCount = wishlist.size;
+  const cb = document.getElementById('cartBadge');
+  const wb = document.getElementById('wishBadge');
+  cb.textContent = cartCount; cb.className = 'badge' + (cartCount ? ' show' : '');
+  wb.textContent = wishCount; wb.className = 'badge' + (wishCount ? ' show' : '');
+}
+
+// ── TOAST ─────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── HELPERS ───────────────────────────────────────
+function getCurrentFilter() {
+  const active = document.querySelector('.filter-chip.active');
+  if (!active) return 'all';
+  const map = { '전체':'all','스킨케어':'skincare','메이크업':'makeup','선케어':'suncare','마스크팩':'mask','바디케어':'body' };
+  return map[active.textContent] || 'all';
+}
+
+// ── INIT ─────────────────────────────────────────
+renderProducts();
+</script>
+</body>
+</html>
